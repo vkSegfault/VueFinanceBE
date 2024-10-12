@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
+import time
 
 
 app = FastAPI()
@@ -27,6 +28,7 @@ data = json_data['jobs']
 
 @app.get('/assets', status_code=200)
 async def getAllAssets() -> list[dict]:
+    time.sleep(2)  # TO BE REMOVED
     return data
 
 @app.get('/assets/{id}')

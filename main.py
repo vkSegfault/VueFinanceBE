@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
 import time
+from models.asset import Bond, Stock
+from models.temp_db import bond_list, stock_list
 
 
 app = FastAPI()
@@ -27,9 +29,9 @@ with open('jobs.json') as f:
 data = json_data['jobs']
 
 @app.get('/assets', status_code=200)
-async def getAllAssets() -> list[dict]:
-    time.sleep(2)  # TO BE REMOVED
-    return data
+async def getAllAssets() -> list[Bond | Stock]:
+    time.sleep(1)  # TO BE REMOVED
+    return bond_list + stock_list
 
 @app.get('/assets/{id}')
 async def getOneAsset(id: int) -> dict:

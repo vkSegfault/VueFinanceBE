@@ -1,4 +1,4 @@
-This project uses `pipenv`, `fastapi`, `pydantic`
+This project uses `pipenv`, `fastapi`, `pydantic` and `SQLmodel`
 
 > Since Ubuntu 24.04 we can't install `pip` packages globally, use `pipx` instead:
 > `sudo nala install pipx`

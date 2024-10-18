@@ -46,6 +46,7 @@ async def get_all_assets(
     Query(max_length=10)] = None,
     session: Session = Depends(get_session)
 ) -> list[Bond | Stock]:
+    
     time.sleep(1)  # TO BE REMOVED
 
     bond_list = session.exec(select(Bond)).all()
@@ -77,6 +78,7 @@ async def get_one_bond(
     id: Annotated[uuid.UUID, Path(title='UUID of bond')],
     session: Session = Depends(get_session)
 ) -> Bond:
+    time.sleep(1)  # TO BE REMOVED
     bond = session.get(Bond, id)
     if bond is None:
         raise HTTPException(status_code=404, detail="Asset not found")
@@ -88,6 +90,7 @@ async def get_one_stock(
     id: Annotated[uuid.UUID, Path(title='UUID of stock')],
     session: Session = Depends(get_session)
 ) -> Stock:
+    time.sleep(1)  # TO BE REMOVED
     stock = session.get(Stock, id)
     if stock is None:
         raise HTTPException(status_code=404, detail="Asset not found")

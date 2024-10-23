@@ -81,7 +81,7 @@ async def get_one_bond(
     time.sleep(1)  # TO BE REMOVED
     bond = session.get(Bond, id)
     if bond is None:
-        raise HTTPException(status_code=404, detail="Asset not found")
+        raise HTTPException(status_code=404, detail="Bond not found")
     return bond
 
 
@@ -93,8 +93,13 @@ async def get_one_stock(
     time.sleep(1)  # TO BE REMOVED
     stock = session.get(Stock, id)
     if stock is None:
-        raise HTTPException(status_code=404, detail="Asset not found")
+        raise HTTPException(status_code=404, detail="Stock not found")
     return stock
+
+
+@app.get('/about')
+async def about() -> str:
+    return 'This is backend for Vue Finance'
 
 
 @app.post('/assets/bond')
@@ -127,6 +132,16 @@ async def create(
     return new_stock
 
 
-@app.get('/about')
-async def about() -> str:
-    return 'This is backend for Vue Finance'
+@app.delete('/assets/bond/{id}')
+async def delete(
+    id: Annotated[uuid.UUID, Path(title='UUID of bond')],
+    session: Session = Depends(get_session)  # DI happens here
+) -> dict:
+    bond = session.get(Bond, id)
+    if not bond:
+        raise HTTPException(status_code=404, detail="Bond not found")
+
+    session.delete(bond)
+    session.commit()
+
+    return { 'Message in a bottle': 'Bond deleted' }

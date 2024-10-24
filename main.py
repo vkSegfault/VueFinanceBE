@@ -103,7 +103,7 @@ async def about() -> str:
 
 
 @app.post('/assets/bond')
-async def create(
+async def create_bond(
     bondDTO: BondDTO,
     session: Session = Depends(get_session)  # DI happens here
 ) -> Bond:
@@ -118,7 +118,7 @@ async def create(
 
 
 @app.post('/assets/stock')
-async def create(
+async def create_stock(
     stockDTO: StockDTO,
     session: Session = Depends(get_session)  # DI happens here
 ) -> Stock:
@@ -130,6 +130,27 @@ async def create(
     session.refresh(new_stock)
 
     return new_stock
+
+
+@app.put("/assets/bond/{id}", response_model=Bond)
+async def update_bond(
+    id: Annotated[uuid.UUID, Path(title='UUID of bond')],
+    bondDTO: BondDTO,
+    session: Session = Depends(get_session)  # DI happens here
+) -> Bond:
+    bond = session.get(Bond, id)
+    if bond is None:
+        raise HTTPException(status_code=404, detail="Bond not found")
+
+    # https://fastapi.tiangolo.com/tutorial/sql-databases/#update-a-hero-with-heroupdate
+    bond_data = bondDTO.model_dump(exclude_unset=True)
+    bond.sqlmodel_update(bond_data)
+
+    session.add(bond)
+    session.commit()
+    session.refresh(bond)
+    
+    return bond
 
 
 @app.delete('/assets/bond/{id}')

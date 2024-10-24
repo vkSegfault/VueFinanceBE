@@ -145,3 +145,17 @@ async def delete(
     session.commit()
 
     return { 'Message in a bottle': 'Bond deleted' }
+
+@app.delete('/assets/stock/{id}')
+async def delete(
+    id: Annotated[uuid.UUID, Path(title='UUID of stock')],
+    session: Session = Depends(get_session)  # DI happens here
+) -> dict:
+    stock = session.get(Stock, id)
+    if not stock:
+        raise HTTPException(status_code=404, detail="Stock not found")
+
+    session.delete(stock)
+    session.commit()
+
+    return { 'Message in a bottle': 'Stock deleted' }
